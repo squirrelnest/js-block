@@ -51,6 +51,7 @@ class Blockchain {
 
     minePendingTransactions(miningRewardAddress) {
         let block = new Block(Date.now(), this.pendingTransactions)
+        block.previousHash = this.getLatestBlock().hash
         block.mineBlock(this.difficulty)
         this.pendingTransactions = [
             new Transaction(null, miningRewardAddress, this.miningReward)
@@ -87,14 +88,14 @@ class Blockchain {
             const previousBlock = this.chain[i - 1]
 
             if (currentBlock.hash !== currentBlock.calculateHash()) {
-                console.log("current hash is not equal")
+                console.log("\ncurrent hash is not equal")
                 console.log("currentBlock.hash: ", currentBlock.hash)
                 console.log("currentBlock.calculateHash: ", currentBlock.calculateHash())
                 return false
             } 
 
             if (currentBlock.previousHash !== previousBlock.hash) {
-                console.log("Block " + i + ": previous hash is not equal")
+                console.log("\nBlock " + i + ": previous hash is not equal")
                 console.log("currentBlock.previousHash: ", currentBlock.previousHash)
                 console.log("previousBlock.hash: ", previousBlock.hash)
                 return false
@@ -110,17 +111,20 @@ let ourCrypto = new Blockchain()
 ourCrypto.createTransaction(new Transaction("address1", "address2", 100))
 ourCrypto.createTransaction(new Transaction("address1", "address2", 50))
 
-console.log("Starting the miner.")
+console.log("Starting the miner...")
 
 ourCrypto.minePendingTransactions("our-address")
 
 console.log("Balance is: " + ourCrypto.getBalanceOfAddress("our-address"))
 
-console.log("\nMining a second time")
+console.log("\nMining a second time...")
 
 ourCrypto.minePendingTransactions("our-address")
 
 console.log("New balance is: " + ourCrypto.getBalanceOfAddress("our-address"))
+
+console.log(JSON.stringify(ourCrypto, null, 4))
+console.log("Is blockchain valid? " + ourCrypto.isChainValid())
 
 /*
 console.log("Mining block 1...")
