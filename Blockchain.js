@@ -6,6 +6,7 @@ class Block {
         this.timestamp = timestamp
         this.previousHash = previousHash
         this.hash = this.calculateHash()
+        this.data = data
     }
 
     calculateHash() {
@@ -38,10 +39,16 @@ class Blockchain {
             const previousBlock = this.chain[i - 1]
 
             if (currentBlock.hash !== currentBlock.calculateHash()) {
+                console.log("current hash is not equal")
+                console.log("currentBlock.hash: ", currentBlock.hash)
+                console.log("currentBlock.calculateHash: ", currentBlock.calculateHash())
                 return false
             } 
 
             if (currentBlock.previousHash !== previousBlock.hash) {
+                console.log("Block " + i + ": previous hash is not equal")
+                console.log("currentBlock.previousHash: ", currentBlock.previousHash)
+                console.log("previousBlock.hash: ", previousBlock.hash)
                 return false
             }
         }
@@ -56,10 +63,10 @@ ourCrypto.addBlock(new Block(1, "01/02/2025", { amount: 4 }))
 ourCrypto.addBlock(new Block(2, "01/03/2025", { amount: 10 }))
 
 console.log(JSON.stringify(ourCrypto, null, 4))
-
 console.log("Is blockchain valid? " + ourCrypto.isChainValid())
 
 ourCrypto.chain[1].data = { amount: 100 }
 ourCrypto.chain[1].hash = ourCrypto.chain[1].calculateHash()
 
+console.log(JSON.stringify(ourCrypto, null, 4))
 console.log("Is blockchain valid? " + ourCrypto.isChainValid())
